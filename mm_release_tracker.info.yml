@@ -1,0 +1,6 @@
+name: Release tracker
+type: module
+description: Show a release number in the status table.
+package: MediaMonks
+core: 8.x
+version: 8.x-1.0

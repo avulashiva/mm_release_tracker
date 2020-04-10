@@ -1,0 +1,8 @@
+{
+  "name": "mediamonks/mm_release_tracker",
+  "type": "mediamonks-drupal-module",
+  "description": "Show a release number in the status table",
+  "keywords": ["Drupal"],
+  "license": "GPL-2.0+",
+  "minimum-stability": "dev"
+}

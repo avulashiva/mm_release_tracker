@@ -1,0 +1,43 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the MM release tracker module.
+ */
+
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+
+/**
+ * Implements hook_requirements().
+ */
+function mm_release_tracker_requirements($phase) {
+  if ($phase == 'runtime') {
+    $config = \Drupal::configFactory()->get('mm_release_tracker.settings');
+
+    // Test if the current release version is equal to the release version in
+    // the sync configuration.
+    // @todo Don't assume source config is stored in 'sync'.
+    $sync = \Drupal::service('config.storage.sync')
+      ->read('mm_release_tracker.settings');
+    $current = \Drupal::service('config.storage')
+      ->read('mm_release_tracker.settings');
+
+    $requirements['mm_release_tracker'] = [
+      'title' => t('Release'),
+      'value' => $config->get('release'),
+      'weight' => -9,
+    ];
+
+    // If the versions do not match, raise an error.
+    if (!empty($sync['release']) && $current['release'] != $sync['release']) {
+      $requirements['mm_release_tracker']['severity'] = REQUIREMENT_ERROR;
+      $value = new TranslatableMarkup('Configuration update pending for update from %old_version to %new_version', [
+          '%old_version' => $current['release'],
+          '%new_version' => $sync['release']
+        ]);
+      $requirements['mm_release_tracker']['value'] = $value;
+    }
+
+    return $requirements;
+  }
+}
